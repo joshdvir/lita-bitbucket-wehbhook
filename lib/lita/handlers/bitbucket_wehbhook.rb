@@ -6,13 +6,14 @@ module Lita
       http.post "/bitbucket-webhook", :receive
 
       def receive(request, response)
-        json_data = parse_josn(request.params['payload']) or return
-        send_message(json_data)
+        json_data = parse_json(request.params['payload']) or return
+        message = format_message(json_data)
+        response.reply(message)
       end
 
       private
 
-      def parse_josn(json)
+      def parse_json(json)
         MultiJson.load(json)
       rescue MultiJson::LoadError => e
         Lita.logger.error("Could not parse JSON from Bitbucket: #{e.message}")
@@ -33,12 +34,6 @@ module Lita
         Lita.logger.warn "Error formatting message for #{repo} repo. JSON: #{json}"
         return
       end
-
-      def send_message(json)
-        message = format_message(json)
-        response.reply(message)
-      end
-
     end
 
     Lita.register_handler(BitbucketWehbhook)
