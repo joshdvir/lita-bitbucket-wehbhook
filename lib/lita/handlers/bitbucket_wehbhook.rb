@@ -6,6 +6,7 @@ module Lita
       http.post "/bitbucket-webhook", :receive
 
       def receive(request, response)
+        Lita.logger.error(request.params)
         json_data = parse_josn(request.params) or return
         send_message(json_data)
       end
