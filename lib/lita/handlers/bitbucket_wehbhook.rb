@@ -1,13 +1,8 @@
 require "lita"
-require 'awesome_print'
 
 module Lita
   module Handlers
     class BitbucketWehbhook < Handler
-
-      def self.default_config(config)
-        config.rooms = :all
-      end
 
       http.post "/bitbucket-webhook", :receive
 
@@ -19,7 +14,6 @@ module Lita
           target = Source.new(room: room)
           robot.send_message(target, message)
         end
-        # ap robot.send_message(target, message)
       end
 
       private

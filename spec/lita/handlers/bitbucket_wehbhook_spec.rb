@@ -98,38 +98,10 @@ describe Lita::Handlers::BitbucketWehbhook, lita_handler: true do
       JSON
     end
 
-    context "request with commits" do
-      before do
-        allow_message_expectations_on_nil
-        allow(params).to receive(:[]).with("json").and_return(json)
-      end
-
-      it "sends a notification message to the chat" do
-        expect(response).to receive(:reply) do |message|
-          expect(message).to include("[Bitbucket]")
-        end
-        subject.receive(request, response)
-      end
-    end
-
-    context "json" do
-      before do
-        allow_message_expectations_on_nil
-        allow(params).to receive(:[]).with("payload").and_return(json)
-      end
-
-      it "sends a notification message to the chat" do
-        expect(response).to receive(:reply) do |target, message|
-          expect(message).to include("[GitHub] Garen Torikian created")
-        end
-        subject.receive(request, response)
-      end
-    end
-
     context "bad json" do
       before do
         allow_message_expectations_on_nil
-        allow(params).to receive(:[]).with("json").and_return("yaaaaaaiiii")
+        allow(params).to receive(:[]).with("payload").and_return("yaaaaaaiiii")
       end
 
       it "sends a notification message to the chat of a broken json" do
