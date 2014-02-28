@@ -1,6 +1,6 @@
 # lita-bitbucket-wehbhook
 
-TODO: Add a description of the plugin.
+A Lita handler to send Bitbucket.org commit messages to the chat.
 
 ## Installation
 
@@ -13,10 +13,6 @@ gem "lita-bitbucket-wehbhook"
 ## Configuration
 
 TODO: Describe any configuration attributes the plugin exposes.
-
-## Usage
-
-TODO: Describe the plugin's features and how to use them.
 
 ## License
 
