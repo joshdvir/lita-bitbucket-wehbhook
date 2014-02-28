@@ -3,12 +3,18 @@ require "lita"
 module Lita
   module Handlers
     class BitbucketWehbhook < Handler
+
+      def self.default_config(config)
+        config.rooms = :all
+      end
+
       http.post "/bitbucket-webhook", :receive
 
       def receive(request, response)
         json_data = parse_json(request.params['payload']) or return
         message = format_message(json_data)
-        response.reply(message)
+        target = Source.new(nil, Lita.config.handlers.bitbucket_wehbhook.rooms)
+        robot.send_message(target, message)
       end
 
       private
