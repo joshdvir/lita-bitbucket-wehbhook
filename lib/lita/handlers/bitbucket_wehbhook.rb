@@ -34,7 +34,7 @@ module Lita
         return
       end
 
-      def send_message(repo, json)
+      def send_message(json)
         message = format_message(json)
         response.reply(message)
       end
