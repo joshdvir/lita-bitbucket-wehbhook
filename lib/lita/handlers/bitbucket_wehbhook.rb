@@ -1,4 +1,5 @@
 require "lita"
+require 'awesome_print'
 
 module Lita
   module Handlers
@@ -12,9 +13,12 @@ module Lita
 
       def receive(request, response)
         json_data = parse_json(request.params['payload']) or return
+        ap json_data
         message = format_message(json_data)
-        target = Source.new(nil, Lita.config.handlers.bitbucket_wehbhook.rooms)
-        robot.send_message(target, message)
+        ap message
+        target = Source.new(room: Lita.config.adapter.rooms)
+        ap target
+        ap robot.send_message(target, message)
       end
 
       private
