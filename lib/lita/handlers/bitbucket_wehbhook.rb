@@ -13,12 +13,13 @@ module Lita
 
       def receive(request, response)
         json_data = parse_json(request.params['payload']) or return
-        ap json_data
         message = format_message(json_data)
-        ap message
-        target = Source.new(room: Lita.config.adapter.rooms)
-        ap target
-        ap robot.send_message(target, message)
+        rooms = Lita.config.adapter.rooms
+        rooms.each do |room|
+          target = Source.new(room: room)
+          robot.send_message(target, message)
+        end
+        # ap robot.send_message(target, message)
       end
 
       private
@@ -34,14 +35,15 @@ module Lita
         branches = Hash.new
 
         json['commits'].each do |c|
-          branches[c['branch']] = "<b>On branch \"#{c['branch']}</b>\" \n" if branches[c['branch']].nil?
+          branches[c['branch']] = "On branch '#{c['branch']}' \n" if branches[c['branch']].nil?
           branches[c['branch']] << "- #{c['message']} (#{json['canon_url'] + json['repository']['absolute_url'] + 'commits/' + c['node']})}\n"
         end
 
-        "[Bitbucket] <b>#{json['commits'].first['author']}<b> committed to #{branches.size} branches at #{json['canon_url'] + json['repository']['absolute_url']}\n
-        #{branches.each { |b| b[1] }}"
+        message = "[Bitbucket] #{json['commits'].first['author']} committed to #{branches.size} branches at #{json['canon_url'] + json['repository']['absolute_url']}\n"
+        branches.each { |b| message += b[1] }
+        message
       rescue
-        Lita.logger.warn "Error formatting message for #{repo} repo. JSON: #{json}"
+        Lita.logger.warn "Error formatting message. JSON: #{json}"
         return
       end
     end
